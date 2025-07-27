@@ -4,6 +4,7 @@ go.sum
 
 # Binaries compiled by Go
 build/
+wiki
 
 # Test binary, built with `go test -c`
 *.test
