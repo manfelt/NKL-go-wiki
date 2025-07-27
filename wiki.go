@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"fmt"
 	"log"
 	"errors"
 	"regexp"
@@ -14,9 +15,9 @@ type Page struct {
 	Body []byte
 }
 
-var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
+var validPath = regexp.MustCompile("^/(edit|save|view|home)/([a-zA-Z0-9]+)$")
 
-var templates = template.Must(template.ParseFiles("./tmpl/edit.html", "./tmpl/view.html"))
+var templates = template.Must(template.ParseFiles("./tmpl/edit.html", "./tmpl/view.html", "./tmpl/home.html"))
 
 func (p *Page) save() error {
 	filename := "./data/" + p.Title + ".txt"
@@ -79,6 +80,16 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 
 }
 
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	title := "home"
+    p, err := loadPage(title)
+    if err != nil {
+        p = &Page{Title: title}
+    }
+    fmt.Fprintf(w, "<h1>Home</h1>%s%s%s",
+        p.Title, p.Title, p.Body)
+}
+
 func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 	m := validPath.FindStringSubmatch(r.URL.Path)
 	if m == nil {
@@ -97,6 +108,7 @@ func main() {
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	http.HandleFunc("/", homeHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
