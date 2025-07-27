@@ -1,0 +1,9 @@
+# Workspace
+go.work
+go.sum
+
+# Binaries compiled by Go
+build/
+
+# Test binary, built with `go test -c`
+*.test
