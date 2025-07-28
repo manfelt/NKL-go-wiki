@@ -34,10 +34,10 @@ func loadPage(title string) (*Page, error) {
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-    err := templates.ExecuteTemplate(w, tmpl+".html", p)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
+	err := templates.ExecuteTemplate(w, tmpl+".html", p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
@@ -82,12 +82,11 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	title := "home"
-    p, err := loadPage(title)
-    if err != nil {
-        p = &Page{Title: title}
-    }
-    fmt.Fprintf(w, "<h1>Home</h1>%s%s%s",
-        p.Title, p.Title, p.Body)
+	p, err := loadPage(title)
+	if err != nil {
+		p = &Page{Title: title}
+	}
+	fmt.Fprintf(w, "<h1>%s</h1>", p.Title)
 }
 
 func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
@@ -100,10 +99,10 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 }
 
 func main() {
-//	p1 := &Page{Title: "TestPage", Body: []byte("This is a sample page.")}
-//	p1.save()
-//	p2, _ := loadPage("TestPage")
-//	fmt.Println(string(p2.Body))
+	//	p1 := &Page{Title: "TestPage", Body: []byte("This is a sample page.")}
+	//	p1.save()
+	//	p2, _ := loadPage("TestPage")
+	//	fmt.Println(string(p2.Body))
 
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
